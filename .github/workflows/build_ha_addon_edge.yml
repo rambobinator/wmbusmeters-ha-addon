@@ -24,17 +24,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  prepare:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/upload-artifact@v4
-        with:
-          name: ha-addon_artifact-${{ github.event.client_payload.ver }}
-          path: ${{ github.workspace }}
-          retention-days: 1
-
   build:
-    needs: prepare
     runs-on: ubuntu-latest
     name: Build ${{ matrix.arch }} ${{ matrix.addon }} add-on
     strategy:
@@ -42,10 +32,6 @@ jobs:
         addon: ["wmbusmeters"]
         arch: ["amd64", "armv7", "aarch64"]
     steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: ha-addon_artifact-${{ github.event.client_payload.ver }}
-
       - name: Login to DockerHub
         uses: docker/login-action@v3
         with:
